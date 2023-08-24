@@ -41,16 +41,6 @@ function highVolumeLowCompetition() {
   ]);
 }
 
-function trendingSort() {
-  fixValues();
-
-  // Sort order: [Column, Ascending (true/false)]
-  getRange().sort([{ column: column_number("Three month change"), ascending: false },  // "Three month change" descending
-  { column: column_number("YoY change"), ascending: false },  // "YoY change" descending
-  { column: column_number("Avg. monthly searches"), ascending: false },  // "Avg. monthly searches" descending
-  { column: column_number("Competition (indexed value)"), ascending: true }]); // "Competition (indexed value)" ascending
-}
-
 function getRange() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var range = sheet.getRange(
