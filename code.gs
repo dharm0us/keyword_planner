@@ -100,7 +100,7 @@ function convertColumnTextToNumbers(columnNames) {
       var cellValue = values[i][0].toString();
       // Check if it starts with an apostrophe and is followed by a number
       if (cellValue === "") {
-        values[i][0] = Number("0");
+        values[i][0] = Number("0.00");
       } else if (cellValue.startsWith("'") && !isNaN(cellValue.slice(1))) {
         values[i][0] = Number(cellValue.slice(1));
       }
@@ -108,6 +108,7 @@ function convertColumnTextToNumbers(columnNames) {
 
     // Set the updated values back to the range
     range.setValues(values);
+    range.setNumberFormat("0.00");
   });
 }
 
