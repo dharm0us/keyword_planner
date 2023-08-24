@@ -42,6 +42,7 @@ function highVolumeLowCompetition() {
 }
 
 function sortByStringLengthAndVolume() {
+  fixValues();
 
   var keywordColNum = column_number("Keyword");
   var volumeColNum = column_number("Avg. monthly searches");
