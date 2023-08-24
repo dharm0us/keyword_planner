@@ -80,13 +80,14 @@ function getRange() {
 }
 
 function fixValues() {
-  convertColumnTextToNumbers(["Avg. monthly searches","Top of page bid (low range)", "Top of page bid (high range)"]);
+  convertColumnTextToNumbers(["Top of page bid (low range)", "Top of page bid (high range)"], true);
+  convertColumnTextToNumbers(["Avg. monthly searches"], false);
 
   replaceValuesInColumns(["Three month change", "YoY change"], ['--', '∞', ''], ['0%', '9999999%', '0%']);
   replaceValuesInColumns(["Avg. monthly searches", "Competition (indexed value)"], [''], ['0']);
 }
 
-function convertColumnTextToNumbers(columnNames) {
+function convertColumnTextToNumbers(columnNames, isDecimal) {
   columnNames.forEach(function (columnName) {
     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
     var columnIndex = column_number(columnName);
@@ -100,7 +101,7 @@ function convertColumnTextToNumbers(columnNames) {
       var cellValue = values[i][0].toString();
       // Check if it starts with an apostrophe and is followed by a number
       if (cellValue === "") {
-        values[i][0] = Number("0.00");
+        values[i][0] = "0";
       } else if (cellValue.startsWith("'") && !isNaN(cellValue.slice(1))) {
         values[i][0] = Number(cellValue.slice(1));
       }
@@ -108,7 +109,11 @@ function convertColumnTextToNumbers(columnNames) {
 
     // Set the updated values back to the range
     range.setValues(values);
-    range.setNumberFormat("0.00");
+    if (isDecimal) {
+      range.setNumberFormat("0.00");
+    } else {
+      range.setNumberFormat("0");
+    }
   });
 }
 
