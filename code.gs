@@ -41,6 +41,33 @@ function highVolumeLowCompetition() {
   ]);
 }
 
+function sortByStringLengthAndVolume() {
+
+  var keywordColNum = column_number("Keyword");
+  var volumeColNum = column_number("Avg. monthly searches");
+  
+  // Add a helper column with string lengths
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var dataRange = sheet.getRange(2, keywordColNum, sheet.getLastRow() - 1);
+  var data = dataRange.getValues();
+  var lengths = data.map(function(row) {
+    return [row[0].length];
+  });
+  
+  // Assuming the next available column after your data is where we'll place this temporary data
+  var helperColumn = sheet.getLastColumn() + 1;
+  sheet.getRange(2, helperColumn, lengths.length).setValues(lengths);
+  
+  // Sort based on the helper column (string length) and then volume
+  sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn()).sort([
+    {column: helperColumn, ascending: false},
+    {column: volumeColNum, ascending: false}
+  ]);
+  
+  // Clean up by removing the helper column
+  sheet.deleteColumn(helperColumn);
+}
+
 function getRange() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var range = sheet.getRange(
@@ -72,7 +99,7 @@ function convertColumnTextToNumbers(columnNames) {
       var cellValue = values[i][0].toString();
       // Check if it starts with an apostrophe and is followed by a number
       if (cellValue === "") {
-        values[i][0] = 0;
+        values[i][0] = Number("0");
       } else if (cellValue.startsWith("'") && !isNaN(cellValue.slice(1))) {
         values[i][0] = Number(cellValue.slice(1));
       }
